@@ -11,12 +11,15 @@ export default function SaleDeedForm() {
     date: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
  const handleSubmit = async (e: React.FormEvent) => {
    e.preventDefault();
+   setLoading(true);
    try {
      const res = await fetch("/pdf-generator", {
        method: "POST",
@@ -40,6 +43,8 @@ export default function SaleDeedForm() {
      link.click();
    } catch (error) {
      console.error("Fetch error:", error);
+   } finally {
+     setLoading(false);
    }
  };
   return (
@@ -60,7 +65,15 @@ export default function SaleDeedForm() {
             />
           )
         )}
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-3xl font-semibold w-full hover:scale-95 cursor-pointer transition-all ease-in-out duration-200">Generate PDF</button>
+        <button
+          type="submit"
+          disabled={loading}
+          className={`bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-3xl font-semibold w-full transition-all ease-in-out duration-200 ${
+            loading ? "opacity-50 cursor-not-allowed" : "hover:scale-95 cursor-pointer"
+          }`}
+        >
+          {loading ? "Generating..." : "Generate PDF"}
+        </button>
       </form>
     </div>
   );
