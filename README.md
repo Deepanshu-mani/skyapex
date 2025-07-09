@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+⸻
 
-First, run the development server:
+
+
+
+
+# 📄 SkyApex – Sale Deed PDF Generator
+
+SkyApex is a modern web app that allows users to generate downloadable PDF Sale Deeds based on form input. It features a responsive UI with light/dark mode toggle and is optimized for serverless deployment (e.g., Vercel) using Puppeteer and a Chromium fallback.
+![Screenshot](./public/ss.png)
+---
+
+## 🚀 Features
+
+- 🧾 Sale Deed PDF generation from dynamic form input
+- 🎨 Light & Dark mode support with toggle
+- 💾 Instant PDF download
+- ⚙️ Puppeteer-compatible serverless deployment
+- 🛠 Built with modern technologies
+
+---
+
+## 🛠 Tech Stack
+
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- puppeteer-core
+- @sparticuz/chromium
+- Vercel (for deployment)
+
+---
+
+## 📂 Project Structure
+
+.
+├── app/
+│   ├── page.tsx               # Home route with layout
+│   └── pdf-generator/route.ts # API endpoint to generate PDF
+├── components/
+│   └── SaleDeedForm.tsx       # Form component with theme toggle
+├── utils/
+│   └── htmlTemplate.ts        # Generates dynamic HTML string
+├── public/
+│   └── favicon.ico
+├── styles/
+│   └── globals.css            # Global CSS variables for theming
+└── README.md
+
+---
+
+## 💻 Setup & Installation
 
 ```bash
+git clone https://github.com/your-username/skyapex.git
+cd skyapex
+npm install
+
+
+⸻
+
+🧪 Local Development
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+⸻
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+☁️ Deployment on Vercel
 
-## Learn More
+To make Puppeteer work on Vercel, install these:
 
-To learn more about Next.js, take a look at the following resources:
+npm install puppeteer-core @sparticuz/chromium
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+In app/pdf-generator/route.ts, use this logic:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+const browser = await puppeteer.launch({
+  args: chromium.args,
+  executablePath: process.env.VERCEL ? await chromium.executablePath() : undefined,
+  headless: true,
+});
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+⸻
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📄 PDF Generation
+
+PDFs are created server-side using Puppeteer and your custom HTML string. Files are automatically downloaded by the browser.
+
+⸻
+
