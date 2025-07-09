@@ -15,20 +15,33 @@ export default function SaleDeedForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch("/pdf-generator", {
-      method: "POST",
-      body: JSON.stringify(form),
-    });
+ const handleSubmit = async (e: React.FormEvent) => {
+   e.preventDefault();
+   try {
+     const res = await fetch("/pdf-generator", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify(form),
+     });
 
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `SaleDeed-${Date.now()}.pdf`;
-    link.click();
-  };
+     if (!res.ok) {
+       const errorText = await res.text();
+       console.error("PDF generation failed:", errorText);
+       return;
+     }
+
+     const blob = await res.blob();
+     const url = URL.createObjectURL(blob);
+     const link = document.createElement("a");
+     link.href = url;
+     link.download = `SaleDeed-${Date.now()}.pdf`;
+     link.click();
+   } catch (error) {
+     console.error("Fetch error:", error);
+   }
+ };
   return (
     <div className="bg-black/80 text-white p-8 rounded shadow-md w-full max-w-md mx-auto mt-10">
       <h2 className="text-2xl font-semibold mb-6 text-center justify-center mx-auto">Sale Deed Generator</h2>
