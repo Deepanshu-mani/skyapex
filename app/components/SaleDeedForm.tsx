@@ -30,8 +30,9 @@ export default function SaleDeedForm() {
     link.click();
   };
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="flex border-2 p-4  flex-col gap-4 max-w-md">
+    <div className="bg-black/80 text-white p-8 rounded shadow-md w-full max-w-md mx-auto mt-10">
+      <h2 className="text-2xl font-semibold mb-6 text-center justify-center mx-auto">Sale Deed Generator</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 space-y-4">
         {["name", "father_name", "property_size", "sale_amount", "date"].map(
           (field) => (
             <input
@@ -42,10 +43,11 @@ export default function SaleDeedForm() {
               onChange={handleChange}
               required
               max={field === "date" ? new Date().toISOString().split("T")[0] : undefined}
+              className="bg-black/50 border border-white/20 rounded px-4 py-2 w-full text-white placeholder-gray-400"
             />
           )
         )}
-        <button type="submit" className="bg-blue-500 text-white py-2 rounded-2xl">Genrate PDF</button>
+        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-3xl font-semibold w-full hover:scale-95 cursor-pointer transition-all ease-in-out duration-200">Generate PDF</button>
       </form>
     </div>
   );

@@ -1,26 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
 import { generateHTML } from "../utils/htmlTemplate";
+import puppeteer from "puppeteer-core";
+import Chromium from "chrome-aws-lambda";
 
 export async function POST(req: NextRequest) {
-    const body = await req.json();
-    const html = generateHTML(body);
+  const body = await req.json();
+  const html = generateHTML(body);
 
-    const browser = await puppeteer.launch({
-        headless : true,
-        args: ['--no-sandbox'],
-    });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    
-    const pdfBuffer = await page.pdf({format: 'A4'});
-    await browser.close();
+  const browser = await puppeteer.launch({
+    args: Chromium.args,
+    executablePath: await Chromium.executablePath,
+    headless: Chromium.headless,
+  });
 
-    return new NextResponse(pdfBuffer, {
-        headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Dispostion' : 'attachment; filename="SaleDeed.pdf"',
-        }
-    });
+  const page = await browser.newPage();
+  await page.setContent(html, { waitUntil: "networkidle0" });
 
+  const pdfBuffer = await page.pdf({ format: "a4" });
+  await browser.close();
+
+  return new NextResponse(pdfBuffer, {
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename=SaleDeed.pdf`,
+    },
+  });
 }
